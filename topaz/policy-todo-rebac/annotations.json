@@ -1,0 +1,9 @@
+{
+    "$manifest": {
+        "org.opencontainers.image.vendor": "Aserto",
+        "org.opencontainers.image.authors": "Aserto",
+        "org.opencontainers.image.description": "A ReBAC policy for Aserto's sample todo application.",
+        "org.opencontainers.image.source": "https://github.com/aserto-templates/policy-todo-rebac",
+        "org.openpolicyregistry.template.kind": "policy"
+    }
+}

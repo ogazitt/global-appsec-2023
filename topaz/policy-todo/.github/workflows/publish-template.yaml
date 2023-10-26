@@ -1,0 +1,73 @@
+name: publish_template
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+    - '*'
+
+jobs:
+  publish-template:
+    runs-on: ubuntu-latest
+    name: build
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Read template config
+      id: template-config
+      uses: gertd/yaml-reader-action@v1.0
+      with:
+        file: .github/config-template.yaml
+
+    - name: Calc Tags
+      id: meta
+      uses: docker/metadata-action@v4
+      with:
+        images: |
+          ${{ steps.template-config.outputs.server }}/${{ steps.template-config.outputs.repo }}
+        flavor: |
+          latest=auto
+        tags: |
+          type=semver,pattern={{version}}
+          type=semver,pattern={{major}}.{{minor}}
+          type=semver,pattern={{major}}
+          type=sha
+
+    - name: Oras Login
+      id: "oras-login"
+      env:
+        USERNAME: ${{ steps.template-config.outputs.username }}
+        TOKEN:    ${{ secrets.ASERTO_TEMPLATE_PUBLISH_KEY }}
+        SERVER:   ${{ steps.template-config.outputs.server }}
+      run: |
+        oras login -u $USERNAME -p $TOKEN $SERVER
+
+    - name: Compress action step
+      id: "compress"
+      run: |
+        export ROOT_PATH=$PWD
+        cd content
+        tar -czvf $ROOT_PATH/bundle.tar.gz .
+        cd ..
+
+    - name: Oras Push
+      id: "oras-push"
+      env:
+        TARGET: ${{ steps.template-config.outputs.server }}/${{ steps.template-config.outputs.repo }}:${{ steps.meta.outputs.version }}
+      run: |
+        oras push "${TARGET}" \
+        --annotation-file ./annotations.json \
+        --artifact-type application/vnd.oci.image.layer.v1.tar+gzip ./bundle.tar.gz
+        
+        while read -r tag; do
+          oras tag ${TARGET} ${tag}
+        done < <(echo "${{ steps.meta.outputs.tags }}")
+
+    - name: Oras Logout
+      id: "oras-logout"
+      env:
+        SERVER: ${{ steps.template-config.outputs.server }}
+      run: oras logout $SERVER
