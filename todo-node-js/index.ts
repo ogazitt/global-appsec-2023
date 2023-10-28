@@ -107,9 +107,8 @@ Store.open().then((store) => {
   app.get("/todos", checkJwt, checkAuthz, server.list.bind(server));
   app.post("/todos", checkJwt, checkAuthz, server.create.bind(server));
   app.delete("/todos/:id", checkJwt, checkAuthz, server.delete.bind(server));
-  app.put("/todos/:id", checkJwt, checkAuthz, server.update.bind(server)); 
+  // app.put("/todos/:id", checkJwt, checkAuthz, server.update.bind(server)); 
   
-  /*
   // authorization done with if/else spaghetti code
   app.put("/todos/:id", checkJwt, (req: JWTRequest, res) => {
     try {
@@ -129,7 +128,6 @@ Store.open().then((store) => {
       res.status(500).send(error);
     }
   });
-  */
 
   app.listen(PORT, () => {
     console.log(`⚡️[server]: Server is running at http://localhost:${PORT}`);
