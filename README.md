@@ -1,8 +1,8 @@
 # Fixing Broken Access Control
 ## OWASP 2023 Global AppSec DC
 
-[Session URL](https://sched.co/1ObH0)
-[Deck](https://static.sched.com/hosted_files/owasp2023globalappsecwashin/2e/Global%20AppSec%202023%20-%20Fixing%20Broken%20Access%20Control%20-%20Omri%20Gazitt.pptx)
+* [Session URL](https://sched.co/1ObH0)
+* [Deck](https://static.sched.com/hosted_files/owasp2023globalappsecwashin/2e/Global%20AppSec%202023%20-%20Fixing%20Broken%20Access%20Control%20-%20Omri%20Gazitt.pptx)
 
 ## Overview
 
@@ -30,32 +30,54 @@ We'll first install and set up the Topaz authorizer locally, and then build and 
 
 ### Topaz
 
+1. Install topaz and policy CLIs:
+
 ```sh
 cd ./topaz
 
-# install topaz and policy CLIs
 brew tap aserto-dev/tap && brew install topaz
 brew tap opcr-io/tap && brew install policy
+```
 
-# run topaz install (gets the topaz container image)
+2. Run topaz install (gets the topaz container image):
+
+```sh
 make install
+```
 
-# build the policy locally using the policy CLI
+3. Build the policy locally using the policy CLI:
+
+```sh
 make build-todo
+```
 
-# configure topaz with a local policy image and start it
+4. Configure topaz with a local policy image and start it:
+
+```sh
 make configure-local
+```
 
-# create the relationship model for the Todo app
+5. Create the relationship model for the Todo app:
+
+```sh
 make manifest
+```
 
-# import the data (Citadel users & groups - Rick & Morty)
+6. Import the identity provider data (Citadel users & groups - Rick & Morty):
+
+```sh
 make data
+```
 
-# run the test suite of authorization assertions
+7. Run the test suite of authorization assertions:
+
+```sh
 make test
+```
 
-# bring up the topaz console
+8. Bring up the topaz console:
+
+```sh
 make console
 ```
 
