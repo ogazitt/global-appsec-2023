@@ -63,21 +63,21 @@ Store.open().then((store) => {
   */
 
   //Aserto authorizer middleware function
-  // const checkAuthz: express.Handler = jwtAuthz(
-  //   authzOptions,
-  //   undefined,
-  //   async (req: express.Request) => {
-  //     if (!req.params?.id) {
-  //       return {};
-  //     }
+  const checkAuthz: express.Handler = jwtAuthz(
+    authzOptions,
+    undefined,
+    async (req: express.Request) => {
+      if (!req.params?.id) {
+        return {};
+      }
 
-  //     const todo = await store.get(req.params.id);
-  //     return { ownerID: todo.OwnerID, id: req.params.id };
-  //   }
-  // );
+      const todo = await store.get(req.params.id);
+      return { ownerID: todo.OwnerID, id: req.params.id };
+    }
+  );
 
-  // simple middleware
-  const checkAuthz: express.Handler = jwtAuthz(authzOptions);
+  // super simple middleware - works with policy-rebac-global-appsec
+  // const checkAuthz: express.Handler = jwtAuthz(authzOptions);
 
   const directory = new Directory({});
 
@@ -103,11 +103,14 @@ Store.open().then((store) => {
     res.json(user);
   });
 
+  // authorization done using middleware (checkAuthz)
   app.get("/todos", checkJwt, checkAuthz, server.list.bind(server));
   app.post("/todos", checkJwt, checkAuthz, server.create.bind(server));
   app.delete("/todos/:id", checkJwt, checkAuthz, server.delete.bind(server));
-  // app.put("/todos/:id", checkJwt, checkAuthz, server.update.bind(server)); 
+  app.put("/todos/:id", checkJwt, checkAuthz, server.update.bind(server)); 
   
+  /*
+  // authorization done with if/else spaghetti code
   app.put("/todos/:id", checkJwt, (req: JWTRequest, res) => {
     try {
       const todo: Todo = req.body;
@@ -125,7 +128,8 @@ Store.open().then((store) => {
     } catch (error) {
       res.status(500).send(error);
     }
-  }); 
+  });
+  */
 
   app.listen(PORT, () => {
     console.log(`⚡️[server]: Server is running at http://localhost:${PORT}`);
