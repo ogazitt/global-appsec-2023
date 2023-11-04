@@ -2,7 +2,7 @@
 ## OWASP 2023 Global AppSec DC
 
 * [Session URL](https://sched.co/1ObH0)
-* [Deck](https://static.sched.com/hosted_files/owasp2023globalappsecwashin/2e/Global%20AppSec%202023%20-%20Fixing%20Broken%20Access%20Control%20-%20Omri%20Gazitt.pptx)
+* [Deck](https://static.sched.com/hosted_files/owasp2023globalappsecwashin/8a/Global%20AppSec%202023%20-%20Fixing%20Broken%20Access%20Control%20-%20Final.pptx)
 
 ## Overview
 

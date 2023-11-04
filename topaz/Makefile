@@ -19,8 +19,7 @@ POLICY_IMAGE := ${POLICY_HOST}/${POLICY_ORG}/${POLICY_REPO}:${POLICY_TAG}
 POLICY_NAME  := ${POLICY_REPO}
 
 CONTAINER_NAME := topaz
-CONTAINER_VERSION := console06
-CONTAINER_VERSION := v3.231027.gfa4da3f8 #v3-231016.g397c652c
+CONTAINER_VERSION := latest
 
 .PHONY: all
 all: manifest data test
@@ -53,7 +52,7 @@ configure-local: # grpc-health-probe-bin
 .PHONY: manifest
 manifest:
 	@echo -e "${ATTN_COLOR}==> $@ ${NO_COLOR}"
-	@topaz load ./model/manifest.yaml --insecure --no-check
+	@topaz manifest set ./model/manifest.yaml --insecure --no-check
 
 .PHONY: data
 data:
